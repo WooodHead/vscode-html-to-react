@@ -1,6 +1,9 @@
 'use strict';
 import * as vscode from 'vscode';
 import { TreeItem, TreeItemCollapsibleState, window } from 'vscode';
+const CSS_KEYS_IGNORE = [];
+const CSS_VALUES_IGNORE = ['unset'];
+const CSS_KEY_VALUES_IGNORE = [{ key: 'font-size', value: '100%' }];
 
 function camelize(text) {
   text = text.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
@@ -29,6 +32,9 @@ function getStylesObjectStr(styleText, quoteType) {
       const kvMatch = stl.match(/(.*):(.*);/)
       const key = kvMatch[1].trim()
       const value = kvMatch[2].trim()
+      if (CSS_KEYS_IGNORE.includes(key) || CSS_VALUES_IGNORE.includes(value)) return '';
+      if (CSS_KEY_VALUES_IGNORE.filter(i => i.key === key && i.value === value).length > 0) return '';
+
       const key2 = camelize(key)
       const ret = `${key2}:"${value}", `
       return ret;

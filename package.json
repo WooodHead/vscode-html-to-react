@@ -2,7 +2,7 @@
   "name": "html-to-react",
   "displayName": "html-to-react",
   "description": "Convert HTML to React.",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "publisher": "wooodhead",
   "repository": "https://github.com/wooodhead/vscode-html-to-react.git",
   "engines": {
