@@ -3,7 +3,10 @@ import * as vscode from 'vscode';
 import { TreeItem, TreeItemCollapsibleState, window } from 'vscode';
 const CSS_KEYS_IGNORE = [];
 const CSS_VALUES_IGNORE = ['unset'];
-const CSS_KEY_VALUES_IGNORE = [{ key: 'font-size', value: '100%' }];
+const CSS_KEY_VALUES_IGNORE = [
+  { key: 'font-size', value: '100%' },
+  { key: 'quotes', value: 'auto' }
+];
 
 function camelize(text) {
   text = text.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
