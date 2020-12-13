@@ -1,2 +1,4 @@
 # Demo
-![demo.gif](https://raw.githubusercontent.com/WooodHead/html-to-react/main/demo.gif)
+![demo.gif](https://raw.githubusercontent.com/WooodHead/vscode-html-to-react/main/demo.gif)
+
+# Source code
