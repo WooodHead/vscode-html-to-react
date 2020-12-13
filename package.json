@@ -42,7 +42,7 @@
       },
       {
         "command": "extension.html-to-react-clipboard",
-        "title": "Convert HTML to React",
+        "title": "Convert HTML to React from clipboard",
         "key": "ctrl+shift+v",
         "mac": "cmd+shift+v"
       }
