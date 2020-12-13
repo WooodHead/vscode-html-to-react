@@ -1,8 +1,6 @@
 'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { window, Position } from 'vscode';
+import { TreeItem, TreeItemCollapsibleState, window } from 'vscode';
 
 function camelize(text) {
   text = text.replace(/[-_\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
@@ -39,13 +37,29 @@ function getStylesObjectStr(styleText, quoteType) {
   })
   return styleObjStr;
 }
-export function activate(context: vscode.ExtensionContext) {
 
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with  registerCommand
-  // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand('extension.html-to-react', () => {
-    // The code you place here will be executed every time your command is executed
+function processText(text) {
+  text = text.replace(/class=/g, 'className=')
+  text = text.replace(/autocomplete=/g, 'autoComplete=')
+  text = text.replace(/autofocus=/g, 'autoFocus=')
+  const sections = text.split('style=');
+  const formattedSections = [];
+  for (let index = 0; index < sections.length; index++) {
+    const sec = sections[index];
+    if (index === 0) {
+      formattedSections.push(sec)
+    } else {
+      let styleObjStr = getStylesObjectStr(`style=${sec}`, 'double')
+      styleObjStr = getStylesObjectStr(styleObjStr, 'single')
+      formattedSections.push(styleObjStr)
+    }
+  }
+  text = formattedSections.join('')
+  return text
+}
+
+export function activate(context: vscode.ExtensionContext) {
+  vscode.commands.registerCommand('extension.html-to-react', () => {
     let editor = window.activeTextEditor;
     if (!editor) {
       vscode.window.showErrorMessage('No file opened.');
@@ -63,34 +77,38 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showErrorMessage('No text selected.');
       return;
     }
-    text = text.replace(/class=/g, 'className=')
-    text = text.replace(/autocomplete=/g, 'autoComplete=')
-    text = text.replace(/autofocus=/g, 'autoFocus=')
     editor.edit(function (editBuilder) {
       editBuilder.delete(selection);
-      const sections = text.split('style=');
-      const formattedSections = [];
-      for (let index = 0; index < sections.length; index++) {
-        const sec = sections[index];
-        if (index === 0) {
-          formattedSections.push(sec)
-        } else {
-          let styleObjStr = getStylesObjectStr(`style=${sec}`, 'double')
-          styleObjStr = getStylesObjectStr(styleObjStr, 'single')
-          formattedSections.push(styleObjStr)
-        }
-      }
-      text = formattedSections.join('')
+      text = processText(text)
 
       editBuilder.insert(selection.start, text);
-
       return true;
     });
   });
 
-  context.subscriptions.push(disposable);
+  vscode.commands.registerCommand('extension.html-to-react-clipboard', async () => {
+    let editor = window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showErrorMessage('No file opened.');
+      return;
+    }
+    let selection = editor.selection;
+
+    let text = await vscode.env.clipboard.readText();
+
+    if (!text.length) {
+      vscode.window.showErrorMessage('No text selected.');
+      return;
+    }
+    editor.edit(function (editBuilder) {
+      editBuilder.delete(selection);
+      text = processText(text)
+
+      editBuilder.insert(selection.start, text);
+      return true;
+    });
+  });
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {
 }

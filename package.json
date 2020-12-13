@@ -28,7 +28,8 @@
     "Snippets"
   ],
   "activationEvents": [
-    "onCommand:extension.html-to-react"
+    "onCommand:extension.html-to-react",
+    "onCommand:extension.html-to-react-clipboard"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -38,6 +39,12 @@
         "title": "Convert HTML to React",
         "key": "ctrl+shift+j",
         "mac": "cmd+shift+j"
+      },
+      {
+        "command": "extension.html-to-react-clipboard",
+        "title": "Convert HTML to React",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v"
       }
     ]
   },
