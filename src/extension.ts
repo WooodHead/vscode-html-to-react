@@ -1,6 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
-import { TreeItem, TreeItemCollapsibleState, window } from 'vscode';
+import { window } from 'vscode';
 const CSS_KEYS_IGNORE = [];
 const CSS_VALUES_IGNORE = ['unset'];
 const CSS_KEY_VALUES_IGNORE = [
@@ -103,6 +103,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
     let selection = editor.selection;
 
+    // @ts-ignore
     let text = await vscode.env.clipboard.readText();
 
     if (!text.length) {
